@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_management_app/domain/domain.dart';
+import 'package:task_management_app/presentation/routing/args/task_edit_args.dart';
 import 'package:uuid/v8.dart';
 
 import '../../application/application.dart';
 
 class TaskFormScreen extends ConsumerWidget {
-  final TaskEntity? task;
+  final TaskEditArgs? args;
 
-  const TaskFormScreen({super.key, this.task});
+  const TaskFormScreen({super.key, this.args});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _formKey = GlobalKey<FormState>();
-    final _titleController = TextEditingController(text: task?.title ?? '');
+    final _titleController = TextEditingController(
+      text: args?.task?.title ?? '',
+    );
     final _descriptionController = TextEditingController(
-      text: task?.description ?? '',
+      text: args?.task?.description ?? '',
     );
 
     return Scaffold(
@@ -51,13 +54,13 @@ class TaskFormScreen extends ConsumerWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final newTask = TaskEntity(
-                      id: task?.id ?? UuidV8().generate(),
+                      id: args?.task?.id ?? UuidV8().generate(),
                       title: _titleController.text,
                       description: _descriptionController.text,
                       dueDate: DateTime.now().add(const Duration(days: 1)),
                       priority: TaskPriority.medium,
                     );
-                    if (task != null) {
+                    if (args?.task != null) {
                       ref
                           .read(taskNotifierProvider.notifier)
                           .updateTask(newTask);
@@ -67,7 +70,7 @@ class TaskFormScreen extends ConsumerWidget {
                     Navigator.of(context).pop();
                   }
                 },
-                child: Text(task != null ? 'Update Task' : 'Create Task'),
+                child: Text(args?.task != null ? 'Update Task' : 'Create Task'),
               ),
             ],
           ),
