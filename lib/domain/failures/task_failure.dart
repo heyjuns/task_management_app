@@ -1,15 +1,17 @@
-abstract class TaskFailure {
+import 'package:task_management_app/core/failures/failure.dart';
+
+abstract class TaskFailure extends Failure {
   const TaskFailure();
 }
 
-class Unexpected extends TaskFailure {
-  const Unexpected();
+class TaskUnexpected extends TaskFailure {
+  const TaskUnexpected();
 }
 
-class InsufficientPermission extends TaskFailure {
-  const InsufficientPermission();
+class TaskInsufficientPermission extends TaskFailure {
+  const TaskInsufficientPermission();
 }
 
-class UnableToUpdate extends TaskFailure {
-  const UnableToUpdate();
+class TaskUnableToUpdate extends TaskFailure {
+  const TaskUnableToUpdate();
 }

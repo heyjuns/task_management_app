@@ -23,7 +23,7 @@ class TaskRepositoryImpl implements TaskRepository {
       }
       return Right(tasks);
     } catch (e) {
-      return const Left(Unexpected());
+      return const Left(TaskUnexpected());
     }
   }
 
@@ -35,7 +35,7 @@ class TaskRepositoryImpl implements TaskRepository {
       );
       return Right(task);
     } catch (e) {
-      return const Left(Unexpected());
+      return const Left(TaskUnexpected());
     }
   }
 
@@ -46,7 +46,7 @@ class TaskRepositoryImpl implements TaskRepository {
       await _localDataSource.insertTask(task);
       return const Right(unit);
     } catch (e) {
-      return const Left(Unexpected());
+      return const Left(TaskUnexpected());
     }
   }
 
@@ -57,7 +57,7 @@ class TaskRepositoryImpl implements TaskRepository {
       await _localDataSource.updateTask(task);
       return const Right(unit);
     } catch (e) {
-      return const Left(Unexpected());
+      return const Left(TaskUnexpected());
     }
   }
 
@@ -68,7 +68,7 @@ class TaskRepositoryImpl implements TaskRepository {
       await _localDataSource.deleteTask(id);
       return const Right(unit);
     } catch (e) {
-      return const Left(Unexpected());
+      return const Left(TaskUnexpected());
     }
   }
 }
