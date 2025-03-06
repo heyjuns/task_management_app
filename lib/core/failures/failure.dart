@@ -1,5 +1,3 @@
-// lib/core/failures/failure.dart
-
 abstract class Failure {
   const Failure();
 }
