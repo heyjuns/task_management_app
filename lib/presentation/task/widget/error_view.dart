@@ -1,6 +1,6 @@
 part of '../task_list_screen.dart';
 
-class _ErrorView extends StatelessWidget {
+class _ErrorView extends ConsumerWidget {
   final Object error;
 
   const _ErrorView({required this.error});
@@ -16,7 +16,7 @@ class _ErrorView extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +27,9 @@ class _ErrorView extends StatelessWidget {
           SizedBox(height: 12),
           ElevatedButton(
             onPressed: () {
-              // Trigger a reload
+              ref
+                  .read(taskNotifierProvider.notifier)
+                  .loadTasks(TasksParams.init());
             },
             child: Text('Retry'),
           ),

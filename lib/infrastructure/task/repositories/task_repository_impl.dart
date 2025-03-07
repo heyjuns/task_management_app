@@ -7,11 +7,13 @@ class TaskRepositoryImpl implements TaskRepository {
   final TaskLocalDataSource _localDataSource;
 
   TaskRepositoryImpl(this._firebaseDataSource, this._localDataSource);
-  @override
-  Future<Either<TaskFailure, List<TaskEntity>>> getTasks() async {
-    try {
-      final tasks = await _firebaseDataSource.getTasks();
 
+  @override
+  Future<Either<TaskFailure, List<TaskEntity>>> getTasks(
+    TasksParams params,
+  ) async {
+    try {
+      final tasks = await _firebaseDataSource.getTasks(params);
       if (tasks.isNotEmpty) {
         for (var task in tasks) {
           await _localDataSource.insertTask(task);

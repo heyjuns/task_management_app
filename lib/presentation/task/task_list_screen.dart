@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/v8.dart';
 import '../../application/application.dart';
 import '../../ui/ui.dart';
+import 'widget/task_filter_modal.dart';
 
 part 'widget/task_view.dart';
 part 'widget/tasks_view.dart';
@@ -48,6 +49,24 @@ class TaskListScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           AppSliverAppBar(
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder:
+                        (context) => TaskFilterModal(
+                          onApply: (params) {
+                            ref
+                                .read(taskNotifierProvider.notifier)
+                                .loadTasks(params);
+                          },
+                        ),
+                  );
+                },
+              ),
+            ],
             title: [
               AppText.titleLarge(
                 'My Task',

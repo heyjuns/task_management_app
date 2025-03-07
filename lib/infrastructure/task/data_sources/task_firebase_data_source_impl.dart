@@ -8,8 +8,21 @@ class TaskFirebaseDataSourceImpl implements TaskFirebaseDataSource {
       .collection('tasks');
 
   @override
-  Future<List<TaskEntity>> getTasks() async {
-    final snapshot = await tasksCollection.get();
+  Future<List<TaskEntity>> getTasks(TasksParams params) async {
+    Query query = tasksCollection;
+
+    if (params.priorityFilter != null) {
+      query = query.where('priority', isEqualTo: params.priorityFilter!.name);
+    }
+    if (params.isCompleted != null) {
+      query = query.where('isCompleted', isEqualTo: params.isCompleted);
+    }
+
+    if (params.sortBy != null) {
+      query = query.orderBy(params.sortBy!, descending: !params.ascending);
+    }
+
+    final snapshot = await query.get();
     return snapshot.docs
         .map((doc) => TaskDto.fromFirestore(doc).toDomain())
         .toList();
