@@ -90,8 +90,8 @@ as bool,
 /// @nodoc
 @JsonSerializable()
 
-class _TaskEntity with DiagnosticableTreeMixin implements TaskEntity {
-   _TaskEntity({required this.id, required this.title, required this.description, required this.dueDate, required this.priority, this.isCompleted = false});
+class _TaskEntity extends TaskEntity with DiagnosticableTreeMixin {
+   _TaskEntity({required this.id, required this.title, required this.description, required this.dueDate, required this.priority, this.isCompleted = false}): super._();
   factory _TaskEntity.fromJson(Map<String, dynamic> json) => _$TaskEntityFromJson(json);
 
 @override final  String id;

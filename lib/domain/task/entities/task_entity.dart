@@ -18,4 +18,14 @@ abstract class TaskEntity with _$TaskEntity {
 
   factory TaskEntity.fromJson(Map<String, dynamic> json) =>
       _$TaskEntityFromJson(json);
+
+  TaskEntity._();
+
+  factory TaskEntity.init() => TaskEntity(
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    dueDate: DateTime.now(),
+    priority: TaskPriority.low,
+  );
 }
