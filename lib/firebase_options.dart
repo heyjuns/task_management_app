@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'taskmanagement-16b98.firebasestorage.app',
     iosBundleId: 'com.example.taskManagementApp',
   );
+
 }
