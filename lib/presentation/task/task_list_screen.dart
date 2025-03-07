@@ -14,6 +14,7 @@ import '../../ui/ui.dart';
 
 part 'widget/task_view.dart';
 part 'widget/tasks_view.dart';
+part 'widget/error_view.dart';
 
 class TaskListScreen extends ConsumerWidget {
   const TaskListScreen({super.key});
@@ -81,7 +82,7 @@ class TaskListScreen extends ConsumerWidget {
                 ),
             error:
                 (error, stackTrace) =>
-                    Center(child: AppText.bodyMedium('Error: $error')),
+                    SliverToBoxAdapter(child: _ErrorView(error: error)),
           ),
         ],
       ),
