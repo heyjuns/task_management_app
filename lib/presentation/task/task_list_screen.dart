@@ -87,16 +87,16 @@ class TaskListScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // context.pushNamed(Routes.taskEdit.name);
+          context.pushNamed(Routes.taskEdit.name);
 
-          final TaskEntity task = TaskEntity(
-            id: UuidV8().generate(),
-            title: 'title ${Random().nextInt(100)}',
-            description: 'description ${Random().nextInt(100)}',
-            dueDate: DateTime.now().add(Duration(hours: Random().nextInt(60))),
-            priority: TaskPriority.high,
-          );
-          ref.read(taskNotifierProvider.notifier).addTask(task);
+          // final TaskEntity task = TaskEntity(
+          //   id: UuidV8().generate(),
+          //   title: 'title ${Random().nextInt(100)}',
+          //   description: 'description ${Random().nextInt(100)}',
+          //   dueDate: DateTime.now().add(Duration(hours: Random().nextInt(60))),
+          //   priority: TaskPriority.high,
+          // );
+          // ref.read(taskNotifierProvider.notifier).addTask(task);
         },
         child: const Icon(Icons.add),
       ),

@@ -8,11 +8,19 @@ class TaskView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color color =
+        task.priority == TaskPriority.low
+            ? AppColors.infoColor
+            : task.priority == TaskPriority.medium
+            ? AppColors.warningColor
+            : AppColors.errorColor;
     return InkWell(
       onTap: onTap,
       child: Container(
         padding: AppPadding.small,
-
+        foregroundDecoration: BoxDecoration(
+          color: color.withValues(alpha: .05),
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: AppBorderRadius.small,
@@ -24,17 +32,7 @@ class TaskView extends StatelessWidget {
               offset: Offset(1, 1), // Move shadow right & down
             ),
           ],
-          border: Border(
-            left: BorderSide(
-              width: 4,
-              color:
-                  task.priority == TaskPriority.low
-                      ? AppColors.textSecondaryColor
-                      : task.priority == TaskPriority.medium
-                      ? AppColors.warningColor
-                      : AppColors.errorColor,
-            ),
-          ),
+          border: Border(left: BorderSide(width: 4, color: color)),
         ),
         child: Row(
           children: [

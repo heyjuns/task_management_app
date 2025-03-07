@@ -53,9 +53,9 @@ class TaskFormScreen extends HookConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextFormField(
+                    AppTextField(
                       controller: titleController,
-                      decoration: InputDecoration(labelText: 'Title'),
+                      label: 'Title',
                       validator:
                           (value) =>
                               value == null || value.isEmpty
@@ -63,9 +63,10 @@ class TaskFormScreen extends HookConsumerWidget {
                                   : null,
                     ),
                     AppSpacingWidgets.mediumVerticalSpacer,
-                    TextFormField(
+                    AppTextField(
                       controller: descriptionController,
-                      decoration: InputDecoration(labelText: 'Description'),
+                      label: 'Description',
+                      isMultiline: true,
                       validator:
                           (value) =>
                               value == null || value.isEmpty
@@ -80,21 +81,27 @@ class TaskFormScreen extends HookConsumerWidget {
                               .map(
                                 (priority) => DropdownMenuItem(
                                   value: priority,
-                                  child: AppText.labelMedium(priority.name),
+                                  child: AppText.bodySmall(priority.name),
                                 ),
                               )
                               .toList(),
                       onChanged: (value) => priority.value = value!,
-                      decoration: InputDecoration(labelText: 'Priority'),
+                      decoration: InputDecoration(
+                        labelText: 'Priority',
+                        floatingLabelStyle: TextStyle(
+                          backgroundColor:
+                              AppColors
+                                  .accentColor, // Same as your screen's background
+                          color: AppColors.backgroundColor, // Ensures contrast
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                     AppSpacingWidgets.mediumVerticalSpacer,
-                    TextField(
+                    AppTextField(
                       controller: dueDateController,
-                      decoration: InputDecoration(
-                        labelText: 'Due Date',
-                        icon: const Icon(Icons.calendar_today),
-                      ),
-                      readOnly: true,
+                      label: 'Due Date',
                       onTap: () async {
                         final pickedDate = await showDatePicker(
                           context: context,
@@ -140,49 +147,54 @@ class TaskFormScreen extends HookConsumerWidget {
                             },
                           ),
                         ),
-                        Expanded(
-                          child: AppButtonTypes.secondaryButton(
-                            'Remove',
-                            () async {
-                              final confirmed = await showDialog(
-                                context: context,
-                                builder:
-                                    (context) => AlertDialog(
-                                      title: AppText.headlineMedium(
-                                        'Confirm Deletion',
-                                      ),
-                                      content: AppText.bodyMedium(
-                                        'Are you sure you want to delete this task?',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed:
-                                              () => Navigator.of(
-                                                context,
-                                              ).pop(false),
-                                          child: AppText.labelMedium('Cancel'),
+                        if (args?.task != null)
+                          Expanded(
+                            child: AppButtonTypes.secondaryButton(
+                              'Remove',
+                              () async {
+                                final confirmed = await showDialog(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: AppText.headlineMedium(
+                                          'Confirm Deletion',
                                         ),
-                                        TextButton(
-                                          onPressed:
-                                              () => Navigator.of(
-                                                context,
-                                              ).pop(true),
-                                          child: AppText.labelMedium('Delete'),
+                                        content: AppText.bodyMedium(
+                                          'Are you sure you want to delete this task?',
                                         ),
-                                      ],
-                                    ),
-                              );
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.of(
+                                                  context,
+                                                ).pop(false),
+                                            child: AppText.labelMedium(
+                                              'Cancel',
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.of(
+                                                  context,
+                                                ).pop(true),
+                                            child: AppText.labelMedium(
+                                              'Delete',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                );
 
-                              if (confirmed ?? false) {
-                                ref
-                                    .read(taskNotifierProvider.notifier)
-                                    .deleteTask(args!.task!.id);
-                                if (!context.mounted) return;
-                                Navigator.of(context).pop();
-                              }
-                            },
+                                if (confirmed ?? false) {
+                                  ref
+                                      .read(taskNotifierProvider.notifier)
+                                      .deleteTask(args!.task!.id);
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ],
