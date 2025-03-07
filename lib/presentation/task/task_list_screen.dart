@@ -49,8 +49,24 @@ class TaskListScreen extends ConsumerWidget {
                         extra: TaskEditArgs(task: task),
                       );
                     },
-                    title: AppText.bodyMedium(task.title),
-                    subtitle: AppText.bodySmall(task.description),
+                    title: AppText.bodyMedium(
+                      task.title,
+                      style:
+                          task.isCompleted
+                              ? TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                              )
+                              : null,
+                    ),
+                    subtitle: AppText.bodySmall(
+                      task.description,
+                      style:
+                          task.isCompleted
+                              ? TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                              )
+                              : null,
+                    ),
                     trailing: IconButton(
                       icon:
                           task.isCompleted
