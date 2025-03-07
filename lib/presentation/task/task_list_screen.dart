@@ -1,15 +1,14 @@
-import 'dart:math' as Math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_management_app/domain/domain.dart';
 import 'package:task_management_app/presentation/routing/args/task_edit_args.dart';
 import 'package:task_management_app/presentation/routing/routes/routes.dart';
-import 'package:task_management_app/presentation/routing/routes/task_routes.dart';
-import 'package:uuid/v8.dart';
 
 import '../../application/application.dart';
+import '../../ui/ui.dart';
+
+part 'widget/task_view.dart';
 
 class TaskListScreen extends ConsumerWidget {
   const TaskListScreen({super.key});
@@ -19,49 +18,68 @@ class TaskListScreen extends ConsumerWidget {
     final AsyncValue<List<TaskEntity>> tasks = ref.watch(taskNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Task List')),
+      appBar: AppBar(title: AppText.titleLarge('Task List')),
       body: tasks.when(
         data:
             (taskList) => ListView.builder(
               itemCount: taskList.length,
               itemBuilder: (context, index) {
                 final task = taskList[index];
-                return ListTile(
-                  onTap: () {
-                    context.pushNamed(
-                      Routes.taskEdit.name,
-                      extra: TaskEditArgs(task: task),
-                    );
-                  },
-                  title: Text(task.title),
-                  subtitle: Text(task.description),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      ref
-                          .read(taskNotifierProvider.notifier)
-                          .deleteTask(task.id);
+                return Card(
+                  margin: AppPadding.small,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: AppBorderRadius.small,
+                  ),
+                  child: ListTile(
+                    leading: Container(
+                      width: 4,
+                      decoration: BoxDecoration(
+                        color:
+                            task.priority == TaskPriority.low
+                                ? AppColors.textSecondaryColor
+                                : task.priority == TaskPriority.medium
+                                ? AppColors.warningColor
+                                : AppColors.errorColor,
+                        borderRadius: AppBorderRadius.large,
+                      ),
+                    ),
+                    onTap: () {
+                      context.pushNamed(
+                        Routes.taskEdit.name,
+                        extra: TaskEditArgs(task: task),
+                      );
                     },
+                    title: AppText.bodyMedium(task.title),
+                    subtitle: AppText.bodySmall(task.description),
+                    trailing: IconButton(
+                      icon:
+                          task.isCompleted
+                              ? const Icon(
+                                Icons.check_circle,
+                                color: AppColors.primaryColor,
+                              )
+                              : const Icon(Icons.check_circle_outline),
+                      onPressed: () {
+                        final updatedTask = task.copyWith(
+                          isCompleted: !task.isCompleted,
+                        );
+                        ref
+                            .read(taskNotifierProvider.notifier)
+                            .updateTask(updatedTask);
+                      },
+                    ),
                   ),
                 );
               },
             ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        error:
+            (error, stackTrace) =>
+                Center(child: AppText.bodyMedium('Error: $error')),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Example of adding a new task
-
           context.pushNamed(Routes.taskEdit.name);
-          // final newTask = TaskEntity(
-          //   id: UuidV8().generate(), // Generate a unique ID
-          //   title: 'New Task ${Math.Random().nextInt(100)}',
-          //   description: 'Description of new task',
-          //   dueDate: DateTime.now().add(const Duration(days: 1)),
-          //   priority: TaskPriority.medium,
-          // );
-          // await ref.read(taskNotifierProvider.notifier).addTask(newTask);
         },
         child: const Icon(Icons.add),
       ),
