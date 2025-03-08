@@ -1,0 +1,1 @@
+enum FilterType { completed, priority }

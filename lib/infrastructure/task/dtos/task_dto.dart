@@ -50,10 +50,7 @@ abstract class TaskDto with _$TaskDto {
       'id': doc.id,
       'title': data['title'] as String,
       'description': data['description'] as String,
-      'dueDate':
-          (data['dueDate'] as Timestamp)
-              .toDate()
-              .toIso8601String(), // Convert to ISO String
+      'dueDate': data['dueDate'] as String,
       'priority': data['priority'] as String,
       'isCompleted': data['isCompleted'] as bool,
     });

@@ -8,6 +8,7 @@ class TaskNotifier extends StateNotifier<AsyncValue<List<TaskEntity>>> {
   final CreateTaskUseCase _createTask;
   final UpdateTaskUseCase _updateTask;
   final DeleteTaskUseCase _deleteTask;
+  TasksParams tasksParams = TasksParams.init();
 
   TaskNotifier(
     this._getTasks,
@@ -15,12 +16,12 @@ class TaskNotifier extends StateNotifier<AsyncValue<List<TaskEntity>>> {
     this._updateTask,
     this._deleteTask,
   ) : super(const AsyncValue.loading()) {
-    loadTasks();
+    loadTasks(tasksParams);
   }
 
-  Future<void> loadTasks() async {
+  Future<void> loadTasks(TasksParams params) async {
     state = const AsyncValue.loading();
-    final failureOrTasks = await _getTasks.execute(unit);
+    final failureOrTasks = await _getTasks.execute(params);
     state = failureOrTasks.fold(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (tasks) => AsyncValue.data(tasks),
@@ -31,7 +32,7 @@ class TaskNotifier extends StateNotifier<AsyncValue<List<TaskEntity>>> {
     final failureOrUnit = await _createTask.execute(task);
     failureOrUnit.fold(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
-      (_) => loadTasks(),
+      (_) => loadTasks(tasksParams),
     );
   }
 
@@ -39,7 +40,7 @@ class TaskNotifier extends StateNotifier<AsyncValue<List<TaskEntity>>> {
     final failureOrUnit = await _updateTask.execute(task);
     failureOrUnit.fold(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
-      (_) => loadTasks(),
+      (_) => loadTasks(tasksParams),
     );
   }
 
@@ -47,7 +48,7 @@ class TaskNotifier extends StateNotifier<AsyncValue<List<TaskEntity>>> {
     final failureOrUnit = await _deleteTask.execute(id);
     failureOrUnit.fold(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
-      (_) => loadTasks(),
+      (_) => loadTasks(tasksParams),
     );
   }
 }
